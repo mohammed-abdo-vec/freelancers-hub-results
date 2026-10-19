@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>FreeLancers Hub Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+  .progress { display: grid; gap: 10px; }
+  .progress-figure { font-size: var(--step-3); font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .progress-figure small { font-size: var(--step-1); font-weight: 400; color: var(--muted); }
+  .segments { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .segments span { height: 8px; border-radius: 4px; background: var(--sunk); }
+  .segments .tone-ok { background: var(--ok); }
+  .segments .tone-warn { background: var(--warn); }
+  .segments .tone-bad { background: var(--bad); }
+  .tasks { list-style: none; margin: 0; padding: 0; display: grid; }
+  .task { display: grid; grid-template-columns: 2rem 1fr; gap: 4px 12px; padding: 16px 0; border-top: 1px solid var(--line); }
+  .task:first-child { border-top: 0; padding-top: 4px; }
+  .task-num { font-family: var(--mono); color: var(--muted); font-size: var(--step--1); padding-top: 2px; }
+  .task-body { display: grid; gap: 8px; min-width: 0; }
+  .task-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+  .task-head h3 { font-size: var(--step-0); font-weight: 600; }
+  .links { display: grid; gap: 6px; }
+  .link { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; min-width: 0; }
+  .link a { font-family: var(--mono); font-size: var(--step--1); overflow-wrap: anywhere; }
+  .link .kind { font-size: var(--step--1); color: var(--muted); min-width: 2.75rem; }
+  .hint { font-size: var(--step--1); border-radius: 8px; padding: 8px 12px; margin: 0; }
+  .hint.tone-warn, .hint.tone-bad, .hint.tone-none { background: var(--sunk); }
+</style>
+</head>
+<body>
+<main class="wrap narrow">
+  <section class="login" id="login-view">
+    <div class="panel-head">
+      <span class="eyebrow">FreeLancers Hub</span>
+      <h1>Your task results</h1>
+      <p class="muted small">Log in with the username and password the course team sent you.</p>
+    </div>
+    <form class="panel" id="login-form" autocomplete="on" novalidate>
+      <div class="field">
+        <label for="login">Username</label>
+        <input id="login" name="login" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <p class="login-error" role="alert"></p>
+      <button class="btn" type="submit" data-label="Show my results">Show my results</button>
+    </form>
+  </section>
+
+  <section id="results-view" class="wrap narrow" hidden>
+    <header class="topbar">
+      <div>
+        <span class="eyebrow" id="course"></span>
+        <h1 id="greeting" dir="auto"></h1>
+        <span class="muted small" id="updated"></span>
+      </div>
+      <div class="actions"><button class="btn-quiet" type="button" id="logout">Log out</button></div>
+    </header>
+
+    <section class="panel progress" id="progress"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Your tasks</h2>
+        <p class="muted small">Each task counts when its GitHub repo was posted in the group. For the landing page, a live demo link also counts.</p>
+      </div>
+      <ol class="tasks" id="tasks"></ol>
+    </section>
+
+    <section class="panel" id="tools-panel">
+      <div class="panel-head">
+        <h2>Tools found in your repos</h2>
+        <p class="muted small">Read from each repo's package.json and GitHub's language stats.</p>
+      </div>
+      <div class="chips" id="tools"></div>
+      <div id="extras"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Whole group</h2>
+        <p class="muted small" id="class-note"></p>
+      </div>
+      <div class="bars" id="class-bars"></div>
+    </section>
+
+    <p class="foot">Results come from the links posted in the course's Telegram group. If something looks wrong, post the correct repo link in the group, or tell your coach. It will show here after the next update.</p>
+  </section>
+</main>
+<script src="vault.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
