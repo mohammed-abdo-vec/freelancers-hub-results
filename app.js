@@ -78,5 +78,9 @@ document.getElementById('logout').addEventListener('click', () => {
   resultsView.hidden = true;
   loginView.hidden = false;
 });
-const saved = Vault.recall();
-if (saved) render(saved);
+Vault.recall().then((saved) => {
+  if (saved && saved.data) render(saved.data);
+  else if (saved && saved.stale) {
+    document.querySelector('.login-error').textContent = 'The results were updated. Log in again to see the latest.';
+  }
+});
