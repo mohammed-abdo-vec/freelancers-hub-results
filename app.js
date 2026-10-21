@@ -3,7 +3,13 @@ const HINTS = {
   demo_only: 'We found a live demo but no GitHub repo. Post the repo link in the group so this task counts.',
   broken: 'The repo link you posted no longer opens. It may be deleted, renamed or private. Make it public or post the new link.',
   missing: 'Nothing posted for this task yet. Post the GitHub repo link in the group when it’s ready.',
+  needs_fix: 'Your coach asked for changes to this task. Fix it and post the updated link in the group.',
 };
+
+function coachNote(text) {
+  return el('div', { class: 'coach-note' }, el('span', { class: 'eyebrow', text: 'Coach feedback' }),
+    el('p', { dir: 'auto', text }));
+}
 
 const loginView = document.getElementById('login-view');
 const resultsView = document.getElementById('results-view');
@@ -33,7 +39,8 @@ function render(d) {
     el('div', { class: 'segments', 'aria-hidden': 'true' }, d.tasks.map((t) => el('span', { class: `tone-${STATUS[t.status].tone}` }))),
     el('span', { class: 'muted small', text: d.done === d.total
       ? 'Every task is in. Well done.'
-      : `Still to do: ${d.tasks.filter((t) => !['done', 'demo'].includes(t.status)).map((t) => t.label).join(', ')}.` }));
+      : `Still to do: ${d.tasks.filter((t) => !['done', 'demo'].includes(t.status)).map((t) => t.label).join(', ')}.` }),
+    d.feedback && coachNote(d.feedback));
 
   document.getElementById('tasks').replaceChildren(...d.tasks.map((t, i) => {
     const s = STATUS[t.status];
@@ -46,6 +53,7 @@ function render(d) {
           t.repos.map(repoLine), t.demos.map(demoLine),
           showBroken && t.broken.map((url) => el('div', { class: 'link' },
             el('span', { class: 'kind', text: 'Repo' }), el('span', { class: 'small muted', text: url })))),
+        t.feedback && coachNote(t.feedback),
         HINTS[t.status] && el('p', { class: `hint tone-${s.tone}`, text: HINTS[t.status] })));
   }));
 
