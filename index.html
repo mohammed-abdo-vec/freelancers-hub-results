@@ -31,6 +31,12 @@
   .link .kind { font-size: var(--step--1); color: var(--muted); min-width: 2.75rem; }
   .hint { font-size: var(--step--1); border-radius: 8px; padding: 8px 12px; margin: 0; }
   .hint.tone-warn, .hint.tone-bad, .hint.tone-none { background: var(--sunk); }
+  .feedback { display: grid; }
+  .feedback-item { display: grid; gap: 4px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .feedback-item:first-child { border-top: 0; padding-top: 0; }
+  .feedback-item h3 { font-size: var(--step-0); font-weight: 600; }
+  .feedback-item p { margin: 0; white-space: pre-line; }
+  .feedback-overall { border-inline-start: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 4px; border-top: 0; }
   .coach-note { display: grid; gap: 4px; border-inline-start: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; padding: 8px 12px; }
   .coach-note .eyebrow { color: var(--accent); }
   .coach-note p { margin: 0; white-space: pre-line; }
@@ -76,23 +82,15 @@
         <p class="muted small">Each task counts when its GitHub repo was posted in the group. For the landing page, a live demo link also counts.</p>
       </div>
       <ol class="tasks" id="tasks"></ol>
-    </section>
-
-    <section class="panel" id="tools-panel">
-      <div class="panel-head">
-        <h2>Tools found in your repos</h2>
-        <p class="muted small">Read from each repo's package.json and GitHub's language stats.</p>
-      </div>
-      <div class="chips" id="tools"></div>
       <div id="extras"></div>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="feedback-panel">
       <div class="panel-head">
-        <h2>Whole group</h2>
-        <p class="muted small" id="class-note"></p>
+        <h2>Feedback</h2>
+        <p class="muted small">Your coach's notes on each project.</p>
       </div>
-      <div class="bars" id="class-bars"></div>
+      <div class="feedback" id="feedback"></div>
     </section>
 
     <p class="foot">Results come from the links posted in the course's Telegram group. If something looks wrong, post the correct repo link in the group, or tell your coach. It will show here after the next update.</p>

@@ -6,9 +6,10 @@ const HINTS = {
   needs_fix: 'Your coach asked for changes to this task. Fix it and post the updated link in the group.',
 };
 
-function coachNote(text) {
-  return el('div', { class: 'coach-note' }, el('span', { class: 'eyebrow', text: 'Coach feedback' }),
-    el('p', { dir: 'auto', text }));
+function feedbackItem(label, text) {
+  return el('div', { class: 'feedback-item' },
+    el('h3', { text: label }),
+    text ? el('p', { dir: 'auto', text }) : el('p', { class: 'muted small', text: 'No feedback yet.' }));
 }
 
 const loginView = document.getElementById('login-view');
@@ -39,8 +40,7 @@ function render(d) {
     el('div', { class: 'segments', 'aria-hidden': 'true' }, d.tasks.map((t) => el('span', { class: `tone-${STATUS[t.status].tone}` }))),
     el('span', { class: 'muted small', text: d.done === d.total
       ? 'Every task is in. Well done.'
-      : `Still to do: ${d.tasks.filter((t) => !['done', 'demo'].includes(t.status)).map((t) => t.label).join(', ')}.` }),
-    d.feedback && coachNote(d.feedback));
+      : `Still to do: ${d.tasks.filter((t) => !['done', 'demo'].includes(t.status)).map((t) => t.label).join(', ')}.` }));
 
   document.getElementById('tasks').replaceChildren(...d.tasks.map((t, i) => {
     const s = STATUS[t.status];
@@ -53,27 +53,18 @@ function render(d) {
           t.repos.map(repoLine), t.demos.map(demoLine),
           showBroken && t.broken.map((url) => el('div', { class: 'link' },
             el('span', { class: 'kind', text: 'Repo' }), el('span', { class: 'small muted', text: url })))),
-        t.feedback && coachNote(t.feedback),
         HINTS[t.status] && el('p', { class: `hint tone-${s.tone}`, text: HINTS[t.status] })));
   }));
 
-  const tools = document.getElementById('tools');
-  tools.replaceChildren(...(d.tools.length ? d.tools.map((t) => el('span', { class: 'chip', text: t }))
-    : [el('span', { class: 'muted small', text: 'No repos found yet.' })]));
   const extras = d.extras.filter((e) => typeof e === 'object');
   document.getElementById('extras').replaceChildren(...(extras.length ? [
     el('p', { class: 'small muted', text: 'Other projects you shared (not part of the five tasks):' }),
     el('div', { class: 'links' }, extras.map(repoLine))] : []));
 
-  const c = d.class;
-  document.getElementById('class-note').textContent =
-    `${c.all_done} of ${c.members} members have finished all ${d.total} tasks. Bars show how many have finished each one.`;
-  document.getElementById('class-bars').replaceChildren(...c.per_task.map((t) =>
-    el('div', { class: 'bar-row' },
-      el('span', { class: 'label', text: t.label }),
-      el('div', { class: 'bar-track', role: 'img', 'aria-label': `${t.done} of ${c.members}` },
-        el('span', { style: `width:${(t.done / c.members) * 100}%;background:var(--accent)` })),
-      el('span', { class: 'value', text: `${t.done} of ${c.members}` }))));
+  // The coach's notes on each project; points are never part of this page's data
+  document.getElementById('feedback').replaceChildren(
+    d.feedback && el('div', { class: 'feedback-item feedback-overall' }, el('h3', { text: 'Overall' }), el('p', { dir: 'auto', text: d.feedback })),
+    ...d.tasks.map((t) => feedbackItem(t.label, t.feedback)));
 
   loginView.hidden = true;
   resultsView.hidden = false;
